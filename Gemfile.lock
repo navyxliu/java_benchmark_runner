@@ -1,0 +1,17 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    enumerable-statistics (2.0.7)
+    power_assert (2.0.1)
+    test-unit (3.5.3)
+      power_assert
+
+PLATFORMS
+  universal-darwin-20
+
+DEPENDENCIES
+  enumerable-statistics
+  test-unit
+
+BUNDLED WITH
+   2.3.18
