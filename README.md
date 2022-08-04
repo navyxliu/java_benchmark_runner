@@ -18,34 +18,36 @@ JPR logically consists of 3 components: runner, post-processing(PP) and data ana
 Runner is the front-end. It sets up running environments, resolves dependencies and execute plans.
 One task is to collect metadata and save them along with running records.
 
-Plan is composite or recursive. The atom is a single run and a PP script. A practical plan lego'es atoms in different dimensions. eg. a comparative plan consists of 2 atoms with and without a JVM option, or N copies Java variants. A long-term tracking plan may have a daily atom and a timer. 
+Plan is composite or recursive. The atom is a single run and a PP script. A practical plan lego'es atoms in different dimensions. eg. a comparative plan consists of 2 atoms with and without a JVM option, or N copies Java variants. A long-term tracking plan may have a daily atom and a timer.
 
 Ideally, a plan is defined in a spec-lang. The spec defines hosts, architectures, Java variants or even JVM options in a DSL.
 The script engine interprets the spec and generate the composite plans.
 
-Runner certainly must support both local and remote execution. We priorize local first. 
+Runner certainly must support both local and remote execution. I priorize local first.
 Remote execution will reuse the code of local execution. All we need to do is to provision an isolated environment.
 
 ### Post-processing(PP)
-PP is the middle-end. It processes benchmark outputs, work out releveant metrics and store data to persistance layer.
-A PP script is associated with a plan. the reason we separate it out because PP scripts don't necessarily execute on specified environment. We may execute PP scripts offline or reschedule to another host.
+PP is the middle-end. It processes benchmark outputs, work out performance data and store them to persistance layer.
+A PP script is associated with a plan. The reason we separate it out is that PP scripts don't necessarily execute on the specified environment. We may execute PP scripts offline or reschedule them to another host.
 
-PP phase parses the outputs of harness and get runtime. we may integrate advanced instrumentation or profilers in runner. 
+PP phase extracts concerning metrics from the outputs of benchmark harness. We plan integrate advanced instrumentation or profilers in runner. eg. extract interesting data from perf data or JFR.
 
-PP script may fail. eg. It is possible that we detect an error from preceding Runner in this phase. It's also possible that Runner succeeds but we fail to collect sufficient data.
+PP script may fail. eg. it is possible that we detect an error from preceding Runner in this phase. It's also possible that Runner succeeds but we fail to collect sufficient data.
 
-PP script may generate Java-specific graph instead of performance data for performance analysis. eg. a flamegraph of allocation.
+PP script may generate Java-specific graph but no performance data are stored. It's for performance analysis. For instance, a flamegraph of allocation.
 
 ### Data Analytics
-This phase runs some statistical processing and visualization. It separates from PP phase because it is problem-agonostic. We don't need expertises of Java or Linux to develop this phase. 
+This phase runs some statistical processing and visualization. It separates from PP phase because it is problem-agonostic. We don't need expertises of Java or Linux to develop this phase.
 We only require general knowledges on statistics and data visualization.
 
-I may consider to integrate a mature data analytics platforms over build it from scratch. 
+The only require is that datapoints need to associate with the metadata. Metadata provide details to conduct the same experiment again. In this way, we can backtrack when performance regression is detected.
+
+I prefer using an established data analytics platform to building from scratch.
 
 ## Random Ideas
-* Why Ruby 2.5? 
+* Why Ruby 2.5?
 
-Ruby is an incredibly flexible object-oriented scripting language. It is easy to define DSLs. Some features such as monkey patch and Mixin can alter framework behaviors easily. I start with MRI but I would dogfood Java and switch to jruby in the future. thefore we cap to Ruby 2.5, the lastest compatible version of jruby for the time being. 
+Ruby is an incredibly flexible object-oriented scripting language. It is easy to define DSLs. Some features such as monkey patch and Mixin can alter framework behaviors easily. I start with MRI but I would dogfood Java and switch to jruby in the future. thefore we cap to Ruby 2.5, the lastest compatible version of jruby for the time being.
 
 * Performance Analysis
 
